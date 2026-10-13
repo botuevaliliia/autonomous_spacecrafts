@@ -17,3 +17,6 @@ python3 -m venv .venv
 ```
 
 Open [the game](http://127.0.0.1:8000/play/) and click **How to play**. Python 3.11+; omit `[basilisk]` to use the fallback.
+
+
+![Uploading Screenshot 2026-10-13 at 5.11.54 PM.png…]()
