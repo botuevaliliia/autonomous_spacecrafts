@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1117">
+<title>Meet Me in Orbit — Someone is waiting</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='9' fill='%23e89970'/%3E%3Cellipse cx='20' cy='20' rx='19' ry='12' fill='none' stroke='%23b6e5d1'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./" aria-label="Meet Me in Orbit home"><span class="brand-orbit" aria-hidden="true">◌</span> meet me <i>in orbit</i><span class="version">A SPACE STORY</span></a>
+  <div class="top-actions"><span id="connection" class="connection">Connecting…</span><button id="notes-button" class="text-button" aria-haspopup="dialog">How to play <span>?</span></button><button id="reset" class="text-button">↺ New attempt</button></div>
+</header>
+<main class="layout">
+  <section class="flight" aria-label="Orbital map and flight controls">
+    <div class="chapter"><span class="eyebrow">CHAPTER 01 <span class="small-line"></span> MARS RENDEZVOUS</span><h1>Someone is waiting.</h1><p>Reach Aster. Match its motion. Both checks below must turn green.</p></div>
+    <div class="map-wrap"><canvas id="map" aria-label="Orbital map showing Mars, your spacecraft, Aster Station, and predicted trajectory"></canvas>
+      <div class="map-label"><span class="dot mint"></span> ASTER STATION <span class="muted">/ LYRA</span></div>
+      <div class="map-scale"><span></span> <span id="scale-label">1,000 km</span><small>Icons enlarged for visibility</small></div>
+      <div class="map-legend"><span><i class="legend-line orange"></i> Your flight</span><span><i class="legend-line mint"></i> After this burn</span></div>
+      <div class="map-tools"><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="zoom-fit" aria-label="Fit orbit">⊙</button></div>
+      <div id="outcome" class="outcome" hidden role="status"><span class="eyebrow" id="outcome-label"></span><h2 id="outcome-title"></h2><p id="outcome-message"></p><button id="retry" class="primary">Fly again ↗</button></div>
+    </div>
+    <div class="flight-bottom"><section class="telemetry" aria-label="Current flight measurements">
+        <div class="arrival-check" id="distance-check"><span>DISTANCE NOW</span><strong id="distance">—</strong><small id="distance-goal">○ Need ≤20 km</small></div>
+        <div class="arrival-check" id="speed-check"><span>RELATIVE SPEED NOW</span><strong id="relative-speed">—</strong><small id="speed-goal">○ Need ≤30 m/s</small></div>
+        <div><span>YOUR ALTITUDE</span><strong id="altitude">—</strong><small>above Mars</small></div>
+        <div><span>YOUR SPEED</span><strong id="velocity">—</strong><small>around Mars</small></div>
+      </section><div class="message"><span class="avatar">L</span><div><span class="eyebrow">LYRA · ASTER STATION</span><p id="story">“I'll be here. Just remember — I'm moving, too.”</p></div></div>
+      <div class="transport"><button id="play" class="play" aria-label="Play simulation">▶ <span>Play</span></button><button id="step" class="step" title="Advance 60 simulated seconds">+60 s</button><span class="divider"></span><label class="speed-label" for="speed">TIME</label><select id="speed" aria-label="Simulation speed"><option value="1">1×</option><option value="60">60×</option><option value="300">300×</option><option value="600" selected>600×</option></select><span class="mission-clock" id="clock">T+ 00:00:00</span></div>
+    </div>
+  </section>
+  <aside class="planner">
+    <div class="planner-heading"><span class="eyebrow">YOUR NEXT MOVE</span><span class="pill" id="flight-status">COASTING</span></div>
+    <h2>A little push.<br> A different future.</h2>
+    <p class="intro">Plan a burn. Watch the path change.<br>Meet the station, then match its speed.</p>
+    <div class="budget"><div><span>MANEUVER BUDGET</span><strong><span id="budget">800</span> <small>m/s</small></strong></div><progress id="budget-bar" max="800" value="800" aria-label="Remaining maneuver budget"></progress></div>
+    <section class="burn-control"><div class="control-title"><label for="magnitude">01 <span>Burn strength</span></label><div><input id="magnitude-number" type="number" min="0" max="450" step="0.1" value="300" aria-label="Burn strength in meters per second"><span>m/s</span></div></div><input id="magnitude" type="range" min="0" max="450" step="0.1" value="300" aria-label="Burn strength slider"><div class="range-labels"><span>0</span><span>225</span><span>450 m/s</span></div></section>
+    <section class="burn-control direction-control"><div class="control-title"><label for="angle">02 <span>Burn direction</span></label><output id="angle-value">0°</output></div><div class="directions"><button data-angle="0" class="selected">↑ Prograde</button><button data-angle="180">↓ Retrograde</button><button data-angle="90">↗ Outward</button><button data-angle="-90">↙ Inward</button></div><input id="angle" type="range" min="-180" max="180" step="1" value="0" aria-label="Burn direction in degrees"><p id="direction-note" class="direction-note">Along your orbit. A prograde burn adds orbital energy.</p></section>
+    <div class="forecast"><div class="forecast-heading"><span class="dot mint"></span><span>AFTER PROPOSED BURN</span><span id="forecast-status">Calculating…</span></div><div class="forecast-values"><div><strong id="predicted-distance">—</strong><small>predicted closest distance</small></div><div><strong id="predicted-time">—</strong><small>predicted time from now</small></div></div><p id="forecast-note">A forecast, not a flight path locked in place.</p></div>
+    <button id="burn" class="primary fire">Execute burn <span>↗</span></button>
+    <button id="coast" class="secondary">Coast to closest approach <span>→</span></button>
+    <p id="feedback" class="feedback" role="status">Flight is paused. Nothing happens until you choose.</p>
+    <button id="log-button" class="log-button" aria-haspopup="dialog">Burn history <span id="burn-count">0 maneuvers</span> ↗</button>
+  </aside>
+</main>
+<footer><span>REAL GRAVITY. ROOM TO EXPERIMENT.</span><span id="engine">PHYSICS CONNECTING</span><span>01 / MEET ME IN ORBIT</span></footer>
+<dialog id="notes" aria-labelledby="help-title">
+  <div class="help-header"><span class="eyebrow">YOUR FLIGHT GUIDE</span><button id="close-notes" class="close" aria-label="Close instructions">×</button></div>
+  <h2 id="help-title">Meet Aster. Stay together.</h2>
+  <p class="help-lead">Aster starts at a new position on each attempt. Lyra is waiting aboard: reach her station and match its velocity, like catching a train moving alongside you.</p>
+  <div class="help-goal"><b>Win when both are true at the same moment</b><span>Distance ≤20 km <em>and</em> relative speed ≤30 m/s</span><small>The flight stops and “Rendezvous complete” appears automatically. Overlapping icons alone do not mean a win.</small></div>
+  <div class="help-tabs" role="tablist" aria-label="Flight guide sections"><button id="play-tab" role="tab" aria-selected="true" aria-controls="play-guide">How to play</button><button id="physics-tab" role="tab" aria-selected="false" aria-controls="physics-guide" tabindex="-1">Why it works</button></div>
+  <section id="play-guide" role="tabpanel" aria-labelledby="play-tab">
+    <ol class="help-steps">
+      <li><b>Plan a push.</b> Choose burn strength and direction. A “burn” instantly changes your velocity; m/s is the size of that change.</li>
+      <li><b>Read the forecast.</b> The mint path and “After proposed burn” box show what would happen if you execute that burn now. They are not your current measurements.</li>
+      <li><b>Execute, then coast.</b> Execute burn spends your maneuver budget. Play lets gravity carry you; pause anytime. After a burn, Coast to closest approach pauses at the predicted nearest encounter within the next three hours.</li>
+      <li><b>Match Aster’s motion.</b> Check Distance now and Relative speed now. Another burn is usually needed to reduce the velocity difference. Being close but moving fast is a flyby.</li>
+    </ol>
+    <p class="help-tip">You have 800 m/s of maneuver budget and 5 simulated hours. Avoid Mars. The time multiplier only changes how quickly you watch the flight. Opening this guide pauses playback.</p>
+    <details><summary>How to practice with a new starting position</summary><p><b>Timing is part of the puzzle.</b> Aster stays on the same outer orbit but starts somewhere new. The same immediate burn will not meet it every time. Coast before departure, pause, and compare the predicted closest distance for your planned burn. Watch how that prediction changes as the two ships move. Execute when you like the encounter, then match the station’s motion near arrival.</p><p>Every starting position is chosen to allow a two-burn rendezvous within the five-hour limit and the original budget. <b>New attempt</b> gives a new position; pausing or opening this guide does not.</p></details>
+    <details><summary>What do the direction buttons mean?</summary><p><b>Prograde (0°)</b> points along the local orbital tangent in the starting direction of travel; <b>Retrograde (180°)</b> points the other way. <b>Outward (+90°)</b> points away from Mars; <b>Inward (−90°)</b> points toward Mars. On an elliptical orbit the tangent direction is not necessarily your exact velocity direction. Use the slider or click the map for angles in between.</p></details>
+  </section>
+  <section id="physics-guide" role="tabpanel" aria-labelledby="physics-tab" hidden>
+    <div class="note-grid">
+      <article><span>01 / GRAVITY</span><h3>Always falling. Always missing.</h3><p>Mars pulls inward while your sideways motion carries you forward. The pull gets weaker with distance: double the distance from Mars’ center and gravity is one quarter as strong.</p></article>
+      <article><span>02 / KEPLER</span><h3>Orbits have a rhythm.</h3><p>Bound, unpowered paths are ellipses, including circles. A ship moves faster near Mars and slower farther away. Larger orbits take longer to complete.</p></article>
+      <article><span>03 / RENDEZVOUS</span><h3>One burn is only the start.</h3><p>A prograde push from the lower circular orbit raises the opposite side of your path. You slow as you climb. Near the higher orbit, another prograde push can match the station’s velocity.</p></article>
+    </div>
+    <div class="physics-model"><b>Real gravity, with deliberate simplifications</b><p>The server integrates <code>a = −μr / |r|³</code> for both objects, with steps no larger than one simulated second. The engine in use appears in the game footer: Basilisk, or the Newtonian numerical fallback.</p><p>Mars is a stationary spherical body. Burns are instantaneous. We omit atmosphere, moons, irregular gravity, finite engine firing, and relativity. This is a two-body orbital model and a generous rendezvous target, not a docking simulation.</p><p>Ship icons are enlarged; distances on the map share one scale. Tests check orbital periods, energy and angular momentum during coasting, and the analytic two-burn transfer.</p></div>
+    <p class="help-sources"><a href="https://science.nasa.gov/solar-system/orbits-and-keplers-laws/" target="_blank" rel="noreferrer">NASA: Kepler’s laws ↗</a><a href="https://avslab.github.io/basilisk/examples/scenarioBasicOrbit.html" target="_blank" rel="noreferrer">Basilisk: basic orbit example ↗</a></p>
+  </section>
+</dialog>
+<dialog id="history" aria-labelledby="history-title"><div class="help-header"><span class="eyebrow">THIS ATTEMPT</span><button id="close-history" class="close" aria-label="Close burn history">×</button></div><h2 id="history-title">Your maneuvers.</h2><ol id="log"><li>No burns yet. Your story starts here.</li></ol></dialog>
+<script type="module" src="game.js?v=3"></script>
+</body>
+</html>

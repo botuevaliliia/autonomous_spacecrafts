@@ -1,0 +1,12 @@
+{
+  "name": "meet-me-in-orbit-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node game-check.js"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2"
+  }
+}

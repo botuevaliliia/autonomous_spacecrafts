@@ -1,0 +1,34 @@
+# One public Markdown page; keep working notes and documentation local.
+*.[mM][dD]
+*.markdown
+!/README.md
+/docs/
+
+# Python environments, caches, and build output.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Frontend dependencies and generated browser reports.
+node_modules/
+test-results/
+playwright-report/
+
+# Local settings, credentials, and editor files.
+.env
+.env.*
+!.env.example
+.codex/
+.agents/
+.aws/
+.idea/
+.vscode/
+.DS_Store
+*.log

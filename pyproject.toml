@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meet-me-in-orbit"
+version = "0.1.0"
+description = "An orbital rendezvous game around Mars, built on real gravity"
+requires-python = ">=3.11"
+dependencies = ["fastapi>=0.115,<1", "pydantic>=2.10,<3", "uvicorn>=0.30,<1"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "httpx>=0.27,<1"]
+basilisk = ["bsk==2.12.0"]
+
+[tool.setuptools.packages.find]
+include = ["orbital_game*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.setuptools.package-data]
+orbital_game = ["static/*"]
